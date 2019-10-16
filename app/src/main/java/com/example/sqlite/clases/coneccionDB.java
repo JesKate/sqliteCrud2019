@@ -11,13 +11,14 @@ public class coneccionDB extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase market) {
-        market.execSQL("create table users(id int primary key autoincrement, " +
+        market.execSQL("create table users(id integer primary key autoincrement, " +
                 "firsname text not null, lastname text not null, email text not null, " +
-                "password text not null)");
+                "password text not null, password2 text not null)");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase market, int i, int i1) {
+        market.execSQL("DROP TABLE IF EXISTS users");
+        onCreate(market);
     }
 }
