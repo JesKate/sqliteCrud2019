@@ -3,103 +3,67 @@ package com.example.sqlite;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.sqlite.clases.coneccionDB;
 
-public class Singup extends AppCompatActivity {
+import java.util.regex.Pattern;
 
-    coneccionDB conn;
+public class Singup extends AppCompatActivity {
     private EditText fname, lapellido, ecorreo, pcontrasena, pcontrasena2;
+    private String valcon = "((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{5,})";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
         //obtener id's
-        fname = findViewById(R.id.idfname);
-        lapellido = findViewById(R.id.apellido);
-        ecorreo = findViewById(R.id.correo);
-        pcontrasena = findViewById(R.id.contrasena);
-        pcontrasena2 = findViewById(R.id.contrasena2);
+        fname =         findViewById(R.id.idfname);
+        lapellido =     findViewById(R.id.apellido);
+        ecorreo =       findViewById(R.id.correo);
+        pcontrasena =   findViewById(R.id.contrasena);
+        pcontrasena2 =  findViewById(R.id.contrasena2);
     }
 
     public void Signup(View view) {
-        //coneccion db
-        conn = new coneccionDB(this, "market", null, 1);
-        //let Db Read-write
-        SQLiteDatabase market = conn.getReadableDatabase();
-        //get data
+        String name =           fname.getText().toString();
+        String apellido =       lapellido.getText().toString();
+        String correo =         ecorreo.getText().toString();
+        String contrasena =     pcontrasena.getText().toString();
+        String contrasena2 =    pcontrasena2.getText().toString();
 
-        String[] parametros={ecorreo.getText().toString()};
+        if(!name.isEmpty() && !apellido.isEmpty() && !correo.isEmpty() && !contrasena.isEmpty() && !contrasena2.isEmpty()) {
+            if(!Patterns.EMAIL_ADDRESS.matcher(correo.trim()).matches()) {
+                Toast.makeText(this, "Email Incorrect", Toast.LENGTH_SHORT).show();
 
-        String name = fname.getText().toString();
-        String apellido = lapellido.getText().toString();
-        String correo = ecorreo.getText().toString();
-        String contrasena = pcontrasena.getText().toString();
-        String contrasena2 = pcontrasena2.getText().toString();
+            }else if(!Pattern.compile(valcon).matcher(contrasena).matches() || contrasena.length() < 5){
+                Toast.makeText(this, "The password must contain letters numbers and symbols", Toast.LENGTH_SHORT).show();
 
-        if (name.length()==0) {
-            Toast.makeText(this, "fill in the name field", Toast.LENGTH_SHORT).show();
-        } else if (apellido.length()==0) {
-            Toast.makeText(this, "fill in the Last name field", Toast.LENGTH_SHORT).show();
-        } else if (correo.length()==0) {
-            Toast.makeText(this, "fill in the Email field", Toast.LENGTH_SHORT).show();
-        } else if (contrasena.length()==0) {
-            Toast.makeText(this, "fill in the Password field", Toast.LENGTH_SHORT).show();
-        } else if (contrasena.length() < 8) {
-            Toast.makeText(this, "The password must be 8 characters", Toast.LENGTH_SHORT).show();
-        } else if (contrasena.length()==0) {
-            Toast.makeText(this, "fill in the Confirmation Password field", Toast.LENGTH_SHORT).show();
-        } else if (!name.isEmpty() && !apellido.isEmpty() && !correo.isEmpty() && !contrasena.isEmpty() &&
-                !contrasena2.isEmpty() && contrasena2.equals(contrasena)) {
-            //validacion email no repetido
-            try{
-                Cursor row = market.rawQuery(
-                        "SELECT "+"email"+
-                                " FROM "+"users"+" WHERE "+"email"+"=? ",parametros
-                );
-                row.moveToFirst();
-                Toast.makeText(this, "El correo "+row.getString(0)+" ya existe", Toast.LENGTH_SHORT).show();
-                row.close();
+            }else if(!contrasena.contentEquals(contrasena2)){
+                Toast.makeText(this, "The passwords must be the same", Toast.LENGTH_SHORT).show();
 
-            }catch (Exception e) {
-                register();
+            }else{
+                String[] users1 = {name, apellido, correo, contrasena};
+                coneccionDB conn = new coneccionDB(this, "market", null, 1);
+                if(conn.register(users1)) {
+                    Toast.makeText(this, "Register successfull", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), Login.class));
+                }else {
+                    Toast.makeText(this, "User already exist", Toast.LENGTH_SHORT).show();
+                }
             }
-            //Toast.makeText(this, "Hola mundo", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Las contraseñas deben ser iguales", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "There are empty fields", Toast.LENGTH_SHORT).show();
         }
     }
-        public void register(){
-            conn=new coneccionDB(this,"market",null,1);
 
-            SQLiteDatabase market=conn.getWritableDatabase();
 
-            String Fname = fname.getText().toString();
-            String Lapellido = lapellido.getText().toString();
-            String Ecorreo = ecorreo.getText().toString();
-            String Pcontrasena = pcontrasena.getText().toString();
-            String Pcontrasena2 = pcontrasena2.getText().toString();
-            //save data-- guardar los datos
-            ContentValues pack = new ContentValues();
-            pack.put("firsname", Fname);
-            pack.put("lastname", Lapellido);
-            pack.put("email", Ecorreo);
-            pack.put("password", Pcontrasena);
-            pack.put("password2", Pcontrasena2);
-
-            Long insert=market.insert("users", null, pack);
-            Toast.makeText(this, "The user has been registered", Toast.LENGTH_SHORT).show();
-
-            //cerrar base de datos
-            market.close();
-        }
 
 }
