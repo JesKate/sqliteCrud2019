@@ -36,7 +36,7 @@ public class Login extends AppCompatActivity {
                 coneccionDB conn = new coneccionDB(this, "market", null, 1);
                 if (conn.enter(users1)) {
                     Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 } else {
                     Toast.makeText(this, "Incorrect", Toast.LENGTH_SHORT).show();
                 }

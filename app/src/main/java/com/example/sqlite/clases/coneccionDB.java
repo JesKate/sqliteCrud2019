@@ -25,7 +25,7 @@ public class coneccionDB extends SQLiteOpenHelper{
     }
     public boolean enter(String[] data){
 
-        SQLiteDatabase conn = this.getWritableDatabase();
+        SQLiteDatabase conn = this.getReadableDatabase();
 
         Cursor cursor = conn.rawQuery("SELECT * from users WHERE email='" + data[0] + "' and " +
                 "password='" + data[1] + "' limit 1", null);
