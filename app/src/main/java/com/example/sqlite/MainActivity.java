@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        list=findViewById(R.id.list);
+        list=findViewById(R.id.listR);
         ecorreo=findViewById(R.id.correo);
     }
 
