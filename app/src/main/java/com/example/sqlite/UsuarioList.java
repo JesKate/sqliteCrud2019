@@ -1,32 +1,12 @@
 package com.example.sqlite;
 
 public class UsuarioList {
-    private int id;
-    private String firsname, lastname, email, password;
+    private String firsname, lastname, email;
 
-    public UsuarioList(int id, String firstname, String lastname, String email, String password, String birth, int country, String phone, char gender) {
-        this.id = id;
-        this.firsname = firstname;
+    public UsuarioList(String firsname, String lastname, String email) {
+        this.firsname = firsname;
         this.lastname = lastname;
         this.email = email;
-        this.password = password;
-    }
-
-    public UsuarioList(String firstname, String lastname, String email, String password) {
-        this.firsname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-    }
-
-    public UsuarioList(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-
-    public int getId() {
-        return id;
     }
 
     public String getFirsname() {
@@ -39,29 +19,5 @@ public class UsuarioList {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setFirsname(String firsname) {
-        this.firsname = firsname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

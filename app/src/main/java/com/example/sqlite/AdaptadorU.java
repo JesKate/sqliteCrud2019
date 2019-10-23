@@ -1,50 +1,56 @@
 package com.example.sqlite;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 
-import java.util.List;
+public class AdaptadorU extends BaseAdapter {
 
-public class AdaptadorU extends RecyclerView.Adapter<AdaptadorU.UserViewHolder>{
-    private List<UsuarioList> listaU;
+    private Context context;
+    private ArrayList <UsuarioList> list;
 
-    public AdaptadorU(List<UsuarioList> listaU) {
-        this.listaU = listaU;
-    }
-
-    public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_cardview, viewGroup, false);
-        return new UserViewHolder(view);
+    public AdaptadorU(Context context, ArrayList<UsuarioList> list) {
+        this.context = context;
+        this.list = list;
     }
     @Override
-    public void onBindViewHolder(@NonNull UserViewHolder userViewHolder, int i) {
-        userViewHolder.id = listaU.get(i).getId();
-        userViewHolder.nomlist1.setText(listaU.get(i).getFirsname());
-        userViewHolder.apellist1.setText(listaU.get(i).getLastname());
-        userViewHolder.correolist1.setText(listaU.get(i).getEmail());
+    public int getCount() {
+        return list.size();
     }
+
     @Override
-    public int getItemCount() {
-        return listaU.size();
+    public Object getItem(int position) {
+        return list.get(position);
     }
 
-    class UserViewHolder extends RecyclerView.ViewHolder {
-
-        TextView nomlist1, apellist1, correolist1;
-        int id;
-
-        UserViewHolder( View item) {
-            super(item);
-
-            nomlist1 = item.findViewById(R.id.nomlist);
-            apellist1 = item.findViewById(R.id.apellist);
-            correolist1 = item.findViewById(R.id.correolist);
-
-        }
+    @Override
+    public long getItemId(int position) {
+        return 0;
     }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        UsuarioList Item = (UsuarioList) getItem(position);
+
+        convertView = LayoutInflater.from(context).inflate(R.layout.list_usu, null);
+        TextView firsname   = convertView.findViewById(R.id.nombrelist);
+        TextView lastname   =  convertView.findViewById(R.id.apellist);
+        TextView email      =  convertView.findViewById(R.id.correolist);
+
+        firsname.setText(Item.getFirsname());
+        lastname.setText(Item.getLastname());
+        email.setText(Item.getEmail());
+
+
+        return convertView;
+    }
+
 }
+
+
+
